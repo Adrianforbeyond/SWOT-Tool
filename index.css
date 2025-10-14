@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* optionale Basis-Styles */
+:root { color-scheme: light; }
+
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Ubuntu, Cantarell, "Noto Sans", "Helvetica Neue", Arial,
+    "Apple Color Emoji", "Segoe UI Emoji";
+  @apply bg-gray-50 text-gray-800 antialiased;
+}
+
+/* eigene Utilities/Komponenten kannst du unten ergänzen */
