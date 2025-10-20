@@ -31,17 +31,20 @@ const uid = () => Math.random().toString(36).slice(2, 9);
 
 function nearestFib(n: number): number {
   if (n <= 0) return 0;
-  let best = FIB[0];
+
+  let best: number = FIB[0];            // <-- explizit number
   let minDiff = Math.abs(n - best);
+
   for (const f of FIB) {
     const d = Math.abs(n - f);
     if (d < minDiff) {
-      best = f;
+      best = f;                         // ok
       minDiff = d;
     }
   }
   return best;
 }
+
 
 function mean(values: number[]): number {
   if (!values.length) return 0;
