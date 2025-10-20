@@ -7,7 +7,7 @@ type Scenario = {
   id: string;
   name: string;
   description: string;
-  files: string[]; // wir speichern Dateinamen/URLs
+  files: string[];
   criteria: Record<Area, Criterion[]>;
 };
 
@@ -51,7 +51,9 @@ function mean(values: number[]): number {
 
 /** ---------- App ---------- */
 export default function App() {
-  const [tab, setTab] = useState<"szenarien" | "kriterien" | "bewertung" | "vergleich">("szenarien");
+  const [tab, setTab] = useState<
+    "szenarien" | "kriterien" | "bewertung" | "vergleich"
+  >("szenarien");
 
   const [scenarios, setScenarios] = useState<Scenario[]>([
     {
@@ -62,8 +64,11 @@ export default function App() {
       criteria: { S: [], W: [], O: [], T: [] },
     },
   ]);
-  const [selectedScenarioId, setSelectedScenarioId] = useState<string>(scenarios[0].id);
+  const [selectedScenarioId, setSelectedScenarioId] = useState<string>(
+    scenarios[0].id
+  );
 
+  // -> Weights sind normale number (kein strikter 1-Typ), dadurch keine TS-Fehler
   const [weights, setWeights] = useState<Weights>({ S: 1, W: -1, O: 1, T: -1 });
 
   const selected = scenarios.find((s) => s.id === selectedScenarioId)!;
@@ -88,7 +93,9 @@ export default function App() {
     });
   }, [scenarios, weights]);
 
-  const sortedForRanking = [...perScenarioStats].sort((a, b) => b.total - a.total);
+  const sortedForRanking = [...perScenarioStats].sort(
+    (a, b) => b.total - a.total
+  );
 
   /** ---------- Handlers ---------- */
   function updateScenario(partial: Partial<Scenario>) {
@@ -153,7 +160,11 @@ export default function App() {
     });
   }
 
-  function setCriterionScore(area: Area, id: string, score: number | undefined) {
+  function setCriterionScore(
+    area: Area,
+    id: string,
+    score: number | undefined
+  ) {
     updateScenario({
       criteria: {
         ...selected.criteria,
@@ -164,13 +175,7 @@ export default function App() {
     });
   }
 
-  function presetWeights(kind: "reset" | "so-pos-wt-neg") {
-    if (kind === "reset") setWeights({ S: 1, W: 1, O: 1, T: 1 });
-    if (kind === "so-pos-wt-neg") setWeights({ S: 1, W: -1, O: 1, T: -1 });
-  }
-
   async function aiScoreAll() {
-    // sammle Kriteriumstexte für das selektierte Szenario
     const payload = {
       scenario: { name: selected.name, description: selected.description },
       criteria: {
@@ -208,7 +213,6 @@ export default function App() {
         Record<Area, Record<string, number>>
       >;
 
-      // Ergebnis anwenden (auf nächstgelegene Fibonacci runden)
       for (const a of AREAS) {
         const mapForArea = data[a] || {};
         for (const c of selected.criteria[a]) {
@@ -502,7 +506,10 @@ function Step3_Scoring(props: {
                 step="0.1"
                 value={weights[a]}
                 onChange={(e) =>
-                  onWeightsChange({ ...weights, [a]: parseFloat(e.target.value) })
+                  onWeightsChange({
+                    ...weights,
+                    [a]: parseFloat(e.target.value),
+                  })
                 }
                 className="w-24 rounded-xl border border-gray-300 px-3 py-1.5"
               />
@@ -594,7 +601,12 @@ function Step3_Scoring(props: {
 
 /** ---------- Step 4 ---------- */
 function Step4_Compare(props: {
-  stats: { id: string; name: string; means: Record<Area, number>; total: number }[];
+  stats: {
+    id: string;
+    name: string;
+    means: Record<Area, number>;
+    total: number;
+  }[];
   weights: Weights;
 }) {
   const { stats, weights } = props;
